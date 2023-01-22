@@ -71,87 +71,11 @@ import baseApi from "./components/initialpage/hooks/baseApi";
 
 
 function HrApp(props) {
-  const {
-    program_1,
-    program_2,
-    program_3,
-    program_4,
-    program_5,
-    program_6,
-    program_7,
-    program_8,
-    program_9,
-    program_10,
-    program_11,
-    program_12,
-    program_13,
-    program_14,
-    program_15,
-    program_16,
-    program_17,
-    tipsoi_18,
-    logAudit,
-    user,
-    roleProgramData,
-    hasError
-  } = useAuth();
-  const [userLoginData, setUserLoginData] = useState(user);
-
-  useEffect(() => {
-    setIsLoading(true);
-    axios
-      .get(`http://${baseApi}/auth/getLoginUser`)
-      .then((data) => {
-        setUserLoginData(data.data.user);
-      })
-      .catch((error) => { })
-  }, []);
-  let logId = userLoginData?.user_id;
-  // let logId = userLoginData ? userLoginData.user_id : "";
-  let rollId = userLoginData?.role_id;
-  let moduleId = parseInt(window.sessionStorage.getItem("moduleId"));
-  let adSubModule = parseInt(window.sessionStorage.getItem("adSubModule"));
-  const [isLoading, setIsLoading] = useState(false);
-  let pathName = window.location.pathname;
 
 
-  //  login status handeling
-  const oldStatus = sessionStorage.getItem("statusId");
-  const logInStatus = Cookies.get("Role");
 
-  if (!logInStatus && oldStatus) {
-    swal({
-      title: "Your session has expired, please login",
-      icon: "warning",
-      buttons: true,
-      dangerMode: true,
-    }).then((willDelete) => {
-      if (willDelete) {
-        window.location.reload();
-      } else {
-        window.location.reload();
-      }
-    });
-    sessionStorage.removeItem("statusId");
-  }
-  const navigate = useNavigate();
 
-  // if (!logInStatus) {
-  //   navigate('/')
-  //   return
-  // }
-  // logId = "Tanusree"
-  // search name keep limitation
-  if (pathName !== "/allemployees/employeeprofile/") {
-    sessionStorage.removeItem("search_name");
-  }
-  if (pathName.includes('hr/docs')) {
-    sessionStorage.setItem("adSubModule", 6);
-  }
-  if (!pathName.includes('hr/docs') && !pathName.includes('hr/lease') && pathName.includes('hr/')) {
-    sessionStorage.setItem("moduleId", 1);
-    sessionStorage.setItem("adSubModule", 1);
-  }
+
 
 
   //console.log = console.warn = console.error = console.dirxml = console.trace = console.info = console.dir = () => { };
@@ -169,177 +93,150 @@ function HrApp(props) {
 
           <Route exact path="/" element={<EmployeeDashboard />} />
 
-          {
+
+          <Route
+            exact
+            path="/admindashboard"
+            element={<Admindashboard />}
+          />
+          <Route
+            path="/employeedashboard"
+            element={<EmployeeDashboard />}
+          />
+          <Route
+            path="/allemployees"
+            element={<AllEmployees />}
+          />
+          <Route
+            path="/employeeslist"
+            element={<Employeeslist />}
+          />
+          <Route
+            path="/allemployees/employeeprofile/:emp_id/profile/:emp_id"
+            element={<Profile />}
+          />
+          <Route
+            path="/employeeslist/employeeprofile/:emp_id/profile/:emp_id"
+            element={<Profile />}
+          />
+          <Route
+            path="/employeeinformationform"
+            element={<EmployeeInformationForm />}
+          />
+          <Route path="/education" element={<Educations />} />
+          <Route
+            path="/employeechildren"
+            element={<EmployeeChildren />}
+
+          />
+          <Route path="/promotion" element={<Promotions />} />
+          <Route path="/posting" element={<Posting />} />
+          <Route path="/training" element={<Trainings />} />
+          <Route
+            path="/trainingPdfReport"
+            element={<TrainingPdfReport />}
+          />
+
+
+          <>
+
+
+            <Route path="/loan" element={<LoanManagement />} />
+
+
+            <Route path="/leave" element={<LeaveManagement />} />
+
+
+
+
+
+
+            <Route
+              path="/health"
+              element={<HealthManagement />}
+            />
+
+            <Route
+              path="/discipline"
+              element={<DisciplineManagement />}
+            />
+
+            <Route
+              path="/eventdashboard"
+              element={<EventDashboard />}
+            />
+
+            <Route
+              path="/eventcalender"
+              element={<EventCalender />}
+            />
+
+            <Route
+              exact path="/eventcreate"
+              element={<EventCreate />}
+            />
+
+            <Route
+              path="/eventorganization"
+              element={<Organization />}
+            />
+
             <>
-              {moduleId === 1 && adSubModule === 1 && (
-                <>
-                  {program_1.length && (
-                    <Route
-                      exact
-                      path="/admindashboard"
-                      element={<Admindashboard />}
-                    />
-                  )}
-
-                  {program_2.length && (
-                    <Route
-                      path="/employeedashboard"
-                      element={<EmployeeDashboard />}
-                    />
-                  )}
-                  {program_3.length && (
-                    <>
-                      <Route
-                        path="/allemployees"
-                        element={<AllEmployees />}
-                      />
-                      <Route
-                        path="/employeeslist"
-                        element={<Employeeslist />}
-                      />
-                      <Route
-                        path="/allemployees/employeeprofile/:emp_id/profile/:emp_id"
-                        element={<Profile />}
-                      />
-                      <Route
-                        path="/employeeslist/employeeprofile/:emp_id/profile/:emp_id"
-                        element={<Profile />}
-                      />
-                      <Route
-                        path="/employeeinformationform"
-                        element={<EmployeeInformationForm />}
-                      />
-
-                    </>
-                  )}
-                  {program_4.length && (
-                    <Route path="/education" element={<Educations />} />
-                  )}
-                  {program_5.length && (
-                    <Route
-                      path="/employeechildren"
-                      element={<EmployeeChildren />}
-                    />
-                  )}
-                  {program_6.length && (
-                    <Route path="/promotion" element={<Promotions />} />
-                  )}
-                  {program_7.length && (
-                    <Route path="/posting" element={<Posting />} />
-                  )}
-                  {program_8.length && (
-                    <>
-                      <Route path="/training" element={<Trainings />} />
-                      <Route
-                        path="/trainingPdfReport"
-                        element={<TrainingPdfReport />}
-                      />
-                    </>
-                  )}
-                  {program_9.length && (
-                    <Route path="/loan" element={<LoanManagement />} />
-                  )}
-                  {program_10.length && (
-                    <>
-                      <Route path="/leave" element={<LeaveManagement />} />
-
-                    </>
-
-
-                  )}
-                  {program_11.length && (
-                    <Route
-                      path="/health"
-                      element={<HealthManagement />}
-                    />
-                  )}
-                  {program_12.length && (
-                    <Route
-                      path="/discipline"
-                      element={<DisciplineManagement />}
-                    />
-                  )}
-                  {program_13.length && (
-                    <Route
-                      path="/eventdashboard"
-                      element={<EventDashboard />}
-                    />
-                  )}
-                  {program_14.length && (
-                    <Route
-                      path="/eventcalender"
-                      element={<EventCalender />}
-                    />
-                  )}
-                  {program_15.length && (
-                    <Route
-                      exact path="/eventcreate"
-                      element={<EventCreate />}
-                    />
-                  )}
-                  {program_16.length && (
-                    <Route
-                      path="/eventorganization"
-                      element={<Organization />}
-                    />
-                  )}
-                  {program_17.length && (
-                    <>
-                      <Route path="/usersadd" element={<UserAdd />} />
-                      <Route path="/loantype" element={<LoanType />} />
-                      <Route path="/grade" element={<Grade />} />
-                      <Route path="/leavetype" element={<LeaveType />} />
-                      <Route path="/acrclass" element={<AcrClass />} />
-                      <Route path="/acrtype" element={<AcrType />} />
-                      <Route path="/district" element={<District />} />
-                      <Route
-                        path="/designation"
-                        element={<Designation />}
-                      />
-                      <Route
-                        path="/department"
-                        element={<Department />}
-                      />
-                      <Route
-                        path="/punishment"
-                        element={<Punishment />}
-                      />
-                      <Route
-                        path="/signature"
-                        element={<AddSignature />}
-                      />
-                      <Route
-                        path="/healthinfo"
-                        element={<HealthInfo />}
-                      />
-                      <Route
-                        path="/documenttype"
-                        element={<DocumentType />}
-                      />
-                      <Route path="/loanfund" element={<LoanFund />} />
-                      <Route
-                        path="/leavelist"
-                        element={<LeaveEmployee />}
-                      />
-                      <Route path="/allrole" element={<Role />} />
-                      <Route
-                        path="/rolespermission"
-                        element={<RoleAndPermission />}
-                      />
-                    </>
-                  )}
-
-                  <Route path="/rolesper" element={<Rolespermission />} />
-
-                  <Route path="/test" element={<Test />} />
-                </>
-              )}
-
-              <Route path="/addmodule" element={<AddModule />} />
-              <Route path="/addsubmodule" element={<AddSubModule />} />
-              <Route path="/addprogram" element={<AddProgram />} />
+              <Route path="/usersadd" element={<UserAdd />} />
+              <Route path="/loantype" element={<LoanType />} />
+              <Route path="/grade" element={<Grade />} />
+              <Route path="/leavetype" element={<LeaveType />} />
+              <Route path="/acrclass" element={<AcrClass />} />
+              <Route path="/acrtype" element={<AcrType />} />
+              <Route path="/district" element={<District />} />
+              <Route
+                path="/designation"
+                element={<Designation />}
+              />
+              <Route
+                path="/department"
+                element={<Department />}
+              />
+              <Route
+                path="/punishment"
+                element={<Punishment />}
+              />
+              <Route
+                path="/signature"
+                element={<AddSignature />}
+              />
+              <Route
+                path="/healthinfo"
+                element={<HealthInfo />}
+              />
+              <Route
+                path="/documenttype"
+                element={<DocumentType />}
+              />
+              <Route path="/loanfund" element={<LoanFund />} />
+              <Route
+                path="/leavelist"
+                element={<LeaveEmployee />}
+              />
+              <Route path="/allrole" element={<Role />} />
+              <Route
+                path="/rolespermission"
+                element={<RoleAndPermission />}
+              />
             </>
-          }
+
+
+            <Route path="/rolesper" element={<Rolespermission />} />
+
+            <Route path="/test" element={<Test />} />
+          </>
+
+
+          <Route path="/addmodule" element={<AddModule />} />
+          <Route path="/addsubmodule" element={<AddSubModule />} />
+          <Route path="/addprogram" element={<AddProgram />} />
+
+
 
 
 
@@ -360,10 +257,9 @@ function HrApp(props) {
           <Route path="/leaverequest" element={<AddleaveRequest />} />
 
 
-          {
-            roleProgramData.length &&
-            <Route path="*" exact={true} element={<NotFound />} />
-          }
+
+          <Route path="*" exact={true} element={<NotFound />} />
+
 
 
 

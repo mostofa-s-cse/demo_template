@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 import AuthProvider from './components/initialpage/contexts/AuthProvider';
@@ -20,15 +19,7 @@ ReactDOM.render(
     <Provider store={store}>
       <PersistGate persistor={persistor}>
         <AuthProvider>
-
           <BrowserRouter>
-            <App />
-
-          </BrowserRouter>
-
-        </AuthProvider>
-        <AuthProvider>
-          <BrowserRouter basename='hr'>
             <HrApp />
           </BrowserRouter>
 

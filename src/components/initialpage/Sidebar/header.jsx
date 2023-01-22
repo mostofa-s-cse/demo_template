@@ -15,157 +15,8 @@ import { notification } from "antd";
 import useAuth from "../hooks/useAuth";
 import Api from "../hooks/Api";
 const Header = () => {
-  const { logoutAction, setUser, user } = useAuth();
-  const [employeeData, setEmployeeData] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
-  const [hasError, setHasError] = useState(false);
-  const emp_id = user.employe_id;
-  // GET EMPLOYEE DATA USING EMPLOYEE ID
-  let logId = user.user_id;
-  useEffect(() => {
-    const getUsers = () => {
-      fetch(`/ords/hrm/employees/v_emp_all/${emp_id}`)
-        .then((res) => {
-          // You have to send it, as I have done below
-          if (res.status >= 400) {
-            throw new Error("Server responds with error!");
-          }
-          return res.json();
-        })
-        .then(
-          (users) => {
-            setEmployeeData(users);
-          },
-
-          (err) => {
-            const mute = err;
-            setHasError(true);
-          }
-        );
-    };
-    if (emp_id) {
-      getUsers();
-    }
-
-  }, [emp_id]);
-
-  //--------------------------- notification section start -------------------------------
-
-  // ----get employee leave data
-  const [getLeaveData, setGetLeaveData] = useState([]);
-  useEffect(() => {
-    const getUsers = () => {
-      setIsLoading(true);
-      fetch(`/ords/hrm/emp_lea/v_emp_lea`)
-        .then((res) => {
-          // You have to send it, as I have done below
-          if (res.status >= 400) {
-            throw new Error("Server responds with error!");
-          }
-          return res.json();
-        })
-        .then(
-          (users) => {
-            setGetLeaveData(users.items);
-            setIsLoading(false);
-          },
-
-          (err) => {
-            const mute = err;
-            setHasError(true);
-            setIsLoading(true);
-          }
-        );
-    };
-    getUsers();
-  }, []);
-
-  // GET LOAN_TYPE DATA
-  const [getLoanData, setGetLoanData] = useState([]);
-
-  useEffect(() => {
-    const getUsers = () => {
-      setIsLoading(true);
-      fetch(`/ords/hrm/emp_loa/v_emp_loa`)
-        .then((res) => {
-          // You have to send it, as I have done below
-          if (res.status >= 400) {
-            throw new Error("Server responds with error!");
-          }
-          return res.json();
-        })
-        .then(
-          (users) => {
-            setGetLoanData(users.items);
-            setIsLoading(false);
-          },
-
-          (err) => {
-            const mute = err;
-            setHasError(true);
-            setIsLoading(true);
-          }
-        );
-    };
-    getUsers();
-  }, []);
-
-  let leaveNewData = getLeaveData.filter((item) => item.status === "New");
-  let loanNewData = getLoanData.filter((item) => item.status === "New");
-  let totalNotification = leaveNewData.length + loanNewData.length;
-  // GET LOAN_TYPE DATA
-  const [getSoftRequLength, setGetSoftRequLength] = useState(0);
-
-  useEffect(() => {
-    const getUsers = () => {
-      setIsLoading(true);
-      fetch(`/ords/hrm/software_requisition/v_soft_req`)
-        .then((res) => {
-          // You have to send it, as I have done below
-          if (res.status >= 400) {
-            throw new Error("Server responds with error!");
-          }
-          return res.json();
-        })
-        .then(
-          (users) => {
-            const softData = users.items;
-            const softNotiData = softData.filter(item => item.status !== 'Done')
-            setGetSoftRequLength(softNotiData.length)
-          },
-
-          (err) => {
-            const mute = err;
-            setHasError(true);
-            setIsLoading(true);
-          }
-        );
-    };
-    getUsers();
-  }, []);
-
-  //-------------------------------- notification end -------------------------------
-  const devNotiHandler = () => {
-    sessionStorage.setItem("adSubModule", 1);
-    window.location.href = '/hr/softRequisition'
-  }
-  const userName = user.name_english;
   const location = useLocation();
   let pathname = location.pathname;
-  const navigate = useNavigate();
-
-  const softwareReqHandler = () => {
-    window.location.href = "/hr/softRequisition"
-  }
-
-  const logOutBtnHandler = async () => {
-    const statusLog = await logoutAction();
-    if (statusLog === 1) {
-      setUser({});
-      navigate('/')
-      window.location.reload()
-    }
-  };
 
   return (
     <div>
@@ -225,7 +76,7 @@ const Header = () => {
                 href="#"
                 className="dropdown-toggle nav-link project-tooltip"
                 data-toggle="dropdown"
-                onClick={softwareReqHandler}
+
               >
                 <div class="blink">
                   <i class="fa fa-telegram fs-4" aria-hidden="true"></i>
@@ -235,58 +86,46 @@ const Header = () => {
                 <span class="project-tooltiptext"> Software Requisition</span>
               </a>
             </li>
-            {user.role_id === 1 &&
-              <li className="nav-item dropdown me-4">
-                <a
-                  href="#"
-                  className="dropdown-toggle nav-link project-tooltip"
-                  data-toggle="dropdown"
-                  onClick={devNotiHandler}
-                >
 
-                  <i class="fa fa-lightbulb-o" aria-hidden="true"></i>{" "}
-                  <span class="project-tooltiptext"> D.Notification</span>
-                  <span className="badge badge-pill">{getSoftRequLength}</span>
+            <li className="nav-item dropdown me-4">
+              <a
+                href="#"
+                className="dropdown-toggle nav-link project-tooltip"
+                data-toggle="dropdown"
 
-                </a>
+              >
 
-                <div className="dropdown-menu notifications">
-                  <div className="topnav-dropdown-header">
-                    <span className="notification-title">Notifications</span>
-                  </div>
+                <i class="fa fa-lightbulb-o" aria-hidden="true"></i>{" "}
+                <span class="project-tooltiptext"> D.Notification</span>
+                <span className="badge badge-pill">0</span>
+
+              </a>
+
+              <div className="dropdown-menu notifications">
+                <div className="topnav-dropdown-header">
+                  <span className="notification-title">Notifications</span>
                 </div>
-              </li>
-            }
+              </div>
+            </li>
+
 
 
 
             {/* /Notifications */}
             <li className="nav-item dropdown">
-              {totalNotification ? (
-                <a
-                  href="#"
-                  className="dropdown-toggle nav-link project-tooltip"
-                  data-toggle="dropdown"
-                >
 
-                  <i className="fa fa-bell-o" />{" "}
-                  <span class="project-tooltiptext">Notification</span>
-                  <span className="badge badge-pill">{totalNotification}</span>
+              <a
+                href="#"
+                className="dropdown-toggle nav-link project-tooltip"
+                data-toggle="dropdown"
+              >
 
-                </a>
-              ) : (
-                <a
-                  href="#"
-                  className="dropdown-toggle nav-link project-tooltip"
-                  data-toggle="dropdown"
-                >
+                <i className="fa fa-bell-o" />{" "}
+                <span class="project-tooltiptext">Notification</span>
+                <span className="badge badge-pill">0</span>
 
-                  <i className="fa fa-bell-o" />{" "}
-                  <span class="project-tooltiptext">Notification</span>
-                  <span className="badge badge-pill">0</span>
+              </a>
 
-                </a>
-              )}
 
               <div className="dropdown-menu notifications">
                 <div className="topnav-dropdown-header">
@@ -304,44 +143,44 @@ const Header = () => {
                         <u className="fs-6 ps-3 text-muted">Leave</u>
                         <i className="fa fs-6 ps-2 fa-bell-o" />{" "}
                         <span className="text-danger fs-6 ">
-                          ({leaveNewData.length})
+                          0
                         </span>
                       </div>
-                      {leaveNewData.map((item) => (
-                        <Link to="/leave">
-                          <div className="media border ps-2">
-                            <div className="media-body">
-                              <p className="noti-details">
-                                <span className="noti-title">
-                                  {item.emp_name}
-                                </span>{" "}
-                                new Leave Request{" "}
-                              </p>
-                            </div>
+
+                      <Link to="/leave">
+                        <div className="media border ps-2">
+                          <div className="media-body">
+                            <p className="noti-details">
+                              <span className="noti-title">
+                                leave
+                              </span>{" "}
+                              new Leave Request{" "}
+                            </p>
                           </div>
-                        </Link>
-                      ))}
+                        </div>
+                      </Link>
+
                       <div>
                         <u className="fs-6 ps-3 text-muted">Loan</u>
                         <i className="fa fs-6 ps-2 fa-bell-o" />{" "}
                         <span className="text-danger fs-6 ">
-                          ({loanNewData.length})
+                          0
                         </span>
                       </div>
-                      {loanNewData.map((item) => (
-                        <Link to="/loan">
-                          <div className="media border ps-2">
-                            <div className="media-body">
-                              <p className="noti-details">
-                                <span className="noti-title">
-                                  {item.name_english}
-                                </span>{" "}
-                                new Loan Request{" "}
-                              </p>
-                            </div>
+
+                      <Link to="/loan">
+                        <div className="media border ps-2">
+                          <div className="media-body">
+                            <p className="noti-details">
+                              <span className="noti-title">
+                                admin
+                              </span>{" "}
+                              new Loan Request{" "}
+                            </p>
                           </div>
-                        </Link>
-                      ))}
+                        </div>
+                      </Link>
+
                     </li>
                   </ul>
                 </div>
@@ -352,110 +191,7 @@ const Header = () => {
             </li>
 
 
-            {/* Message Notifications */}
-            {/* <li className="nav-item dropdown">
-              <a href="#" className="dropdown-toggle nav-link" data-toggle="dropdown">
-                <i className="fa fa-comment-o" /> <span className="badge badge-pill">8</span>
-              </a>
-              <div className="dropdown-menu notifications">
-                <div className="topnav-dropdown-header">
-                  <span className="notification-title">Messages</span>
-                  <a href="" className="clear-noti"> Clear All </a>
-                </div>
-                <div className="noti-content">
-                  <ul className="notification-list">
-                    <li className="notification-message">
-                      <Link onClick={() => localStorage.setItem("minheight", "true")} to="/conversation/chat">
-                        <div className="list-item">
-                          <div className="list-left">
-                            <span className="avatar">
-                              <img alt="" src={Avatar_09} />
-                            </span>
-                          </div>
-                          <div className="list-body">
-                            <span className="message-author">Richard Miles </span>
-                            <span className="message-time">12:28 AM</span>
-                            <div className="clearfix" />
-                            <span className="message-content">Lorem ipsum dolor sit amet, consectetur adipiscing</span>
-                          </div>
-                        </div>
-                      </Link>
-                    </li>
-                    <li className="notification-message">
-                      <Link onClick={() => localStorage.setItem("minheight", "true")} to="/conversation/chat">
-                        <div className="list-item">
-                          <div className="list-left">
-                            <span className="avatar">
-                              <img alt="" src={Avatar_02} />
-                            </span>
-                          </div>
-                          <div className="list-body">
-                            <span className="message-author">John Doe</span>
-                            <span className="message-time">6 Mar</span>
-                            <div className="clearfix" />
-                            <span className="message-content">Lorem ipsum dolor sit amet, consectetur adipiscing</span>
-                          </div>
-                        </div>
-                      </Link>
-                    </li>
-                    <li className="notification-message">
-                      <Link onClick={() => localStorage.setItem("minheight", "true")} to="/conversation/chat">
-                        <div className="list-item">
-                          <div className="list-left">
-                            <span className="avatar">
-                              <img alt="" src={Avatar_03} />
-                            </span>
-                          </div>
-                          <div className="list-body">
-                            <span className="message-author"> Tarah Shropshire </span>
-                            <span className="message-time">5 Mar</span>
-                            <div className="clearfix" />
-                            <span className="message-content">Lorem ipsum dolor sit amet, consectetur adipiscing</span>
-                          </div>
-                        </div>
-                      </Link>
-                    </li>
-                    <li className="notification-message">
-                      <Link onClick={() => localStorage.setItem("minheight", "true")} to="/conversation/chat">
-                        <div className="list-item">
-                          <div className="list-left">
-                            <span className="avatar">
-                              <img alt="" src={Avatar_05} />
-                            </span>
-                          </div>
-                          <div className="list-body">
-                            <span className="message-author">Mike Litorus</span>
-                            <span className="message-time">3 Mar</span>
-                            <div className="clearfix" />
-                            <span className="message-content">Lorem ipsum dolor sit amet, consectetur adipiscing</span>
-                          </div>
-                        </div>
-                      </Link>
-                    </li>
-                    <li className="notification-message">
-                      <Link onClick={() => localStorage.setItem("minheight", "true")} to="/conversation/chat">
-                        <div className="list-item">
-                          <div className="list-left">
-                            <span className="avatar">
-                              <img alt="" src={Avatar_08} />
-                            </span>
-                          </div>
-                          <div className="list-body">
-                            <span className="message-author"> Catherine Manseau </span>
-                            <span className="message-time">27 Feb</span>
-                            <div className="clearfix" />
-                            <span className="message-content">Lorem ipsum dolor sit amet, consectetur adipiscing</span>
-                          </div>
-                        </div>
-                      </Link>
-                    </li>
-                  </ul>
-                </div>
-                <div className="topnav-dropdown-footer">
-                  <Link onClick={() => localStorage.setItem("minheight", "true")} to="/conversation/chat">View all Messages</Link>
-                </div>
-              </div>
-            </li>
+
             {/* /Message Notifications */}
             <li className="nav-item dropdown has-arrow main-drop">
               <a
@@ -464,27 +200,20 @@ const Header = () => {
                 data-toggle="dropdown"
               >
                 <span className="header-img">
-                  {" "}
-                  {employeeData.photo_path ? (
-                    <div className="avatar">
-                      <img
-                        className="avatar"
-                        src={`http://${Api}/static${employeeData.photo_path}`}
-                      />
-                    </div>
-                  ) : (
-                    <div className="header-img avatar">
-                      <img src={placeholderImg} />
-                    </div>
-                  )}
+
+
+                  <div className="header-img avatar">
+                    <img src={placeholderImg} />
+                  </div>
+
 
                 </span>
-                <span>{userName}</span>
+                <span>admin</span>
               </a>
               <div className="dropdown-menu">
                 <Link className="dropdown-item" to="/singleprofile">My Profile</Link>
                 <Link className="dropdown-item" to="/changepassword">Change Password</Link>
-                <a onClick={logOutBtnHandler} className="dropdown-item" >Logout</a>
+                <a className="dropdown-item" >Logout</a>
               </div>
             </li>
 
@@ -505,7 +234,7 @@ const Header = () => {
                 My Profile
               </Link>
               <Link
-                onClick={logOutBtnHandler}
+
                 className="dropdown-item"
                 to="/login"
               >
