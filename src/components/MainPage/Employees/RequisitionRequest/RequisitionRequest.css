@@ -1,0 +1,5 @@
+
+
+.jodit-status-bar , .jodit-toolbar-button_copyformat , .jodit-toolbar-button_fullsize , .jodit-toolbar-button_image{
+    display: none !important;
+}
