@@ -37,17 +37,17 @@ import Admindashboard from "./components/MainPage/Main/Dashboard/Admindashboard"
 import EmployeeDashboard from "./components/MainPage/Main/Dashboard/employeedashboard";
 import Test from "./Test";
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 //------------------------------- transport section start----------------------------------------
 
 // -------------------------------------- end --------------------------------------------
-
 import Cookies from "js-cookie";
 import Calendar from "./components/MainPage/Employees/Employees/Events/calender/calendar";
 import EventCalender from "./components/MainPage/Employees/Employees/Events/EventCalender/EventCalender";
 import EventCreate from "./components/MainPage/Employees/Employees/Events/EventCreate/EventCreate";
 import EventDashboard from "./components/MainPage/Employees/Employees/Events/EventDashboard/EventDashboard";
-
-
 
 import swal from "sweetalert";
 import useAuth from "./components/initialpage/hooks/useAuth";
@@ -67,126 +67,123 @@ import RequisitionRequest from "./components/MainPage/Employees/RequisitionReque
 import AddleaveRequest from "./components/MainPage/Employees/Employees/LeaveApplication/AddLeaveRequest";
 import axios from "axios";
 import baseApi from "./components/initialpage/hooks/baseApi";
-
-
+import Login from "./components/initialpage/Login";
+import RequireAuth from "./components/RequireAuth/RequireAuth";
+import useServer from "./components/initialpage/hooks/useServer";
 
 function HrApp(props) {
-
-
-
-
-
-
-
+  useEffect(()=>{},[])
+  const { user } = useServer();
+  console.log('userinfo', user.role)
   //console.log = console.warn = console.error = console.dirxml = console.trace = console.info = console.dir = () => { };
-
+  const token = localStorage.getItem("token");
   return (
     <div className="App">
       <>
+        {/* {user.role ? (
+          <>
+            <Sidebar></Sidebar>
+            <Header></Header>
+          </>
+        ) : ""} */}
         <Sidebar></Sidebar>
-        <Header></Header>
+            <Header></Header>
         <Routes>
-
-
           <Route path="/calendar" element={<Calendar />} />
 
-
-          <Route exact path="/" element={<EmployeeDashboard />} />
-
-
+          <Route exact path="/" element={<RequireAuth><EmployeeDashboard /></RequireAuth>} />
+          <Route exact path="/login" element={<Login />} />
           <Route
             exact
             path="/admindashboard"
-            element={<Admindashboard />}
+            element={<RequireAuth><Admindashboard /></RequireAuth>}
           />
           <Route
             path="/employeedashboard"
-            element={<EmployeeDashboard />}
+            element={<RequireAuth><EmployeeDashboard /></RequireAuth>}
           />
           <Route
             path="/allemployees"
-            element={<AllEmployees />}
+            element={<RequireAuth><AllEmployees /></RequireAuth>}
           />
           <Route
             path="/employeeslist"
-            element={<Employeeslist />}
+            element={<RequireAuth><Employeeslist /></RequireAuth>}
           />
           <Route
-            path="/allemployees/employeeprofile/:emp_id/profile/:emp_id"
-            element={<Profile />}
+            path="/profile"
+            element={<RequireAuth><Profile /></RequireAuth>}
           />
-          <Route
+          {/* <Route
             path="/employeeslist/employeeprofile/:emp_id/profile/:emp_id"
             element={<Profile />}
-          />
+          /> */}
           <Route
             path="/employeeinformationform"
-            element={<EmployeeInformationForm />}
+            element={<RequireAuth><EmployeeInformationForm /></RequireAuth>}
           />
-          <Route path="/education" element={<Educations />} />
+          <Route path="/education" element={<RequireAuth><Educations /></RequireAuth>} />
           <Route
             path="/employeechildren"
-            element={<EmployeeChildren />}
-
+            element={<RequireAuth><EmployeeChildren /></RequireAuth>}
           />
-          <Route path="/promotion" element={<Promotions />} />
+          {/* <Route path="/promotion" element={<Promotions />} />
           <Route path="/posting" element={<Posting />} />
           <Route path="/training" element={<Trainings />} />
           <Route
             path="/trainingPdfReport"
             element={<TrainingPdfReport />}
-          />
+          /> */}
 
 
           <>
 
 
-            <Route path="/loan" element={<LoanManagement />} />
+            {/* <Route path="/loan" element={<LoanManagement />} /> */}
 
 
-            <Route path="/leave" element={<LeaveManagement />} />
-
-
-
+            <Route path="/leave" element={<RequireAuth><LeaveManagement /></RequireAuth>} />
 
 
 
-            <Route
+
+
+
+            {/* <Route
               path="/health"
               element={<HealthManagement />}
-            />
+            /> */}
 
-            <Route
+            {/* <Route
               path="/discipline"
               element={<DisciplineManagement />}
-            />
+            /> */}
 
-            <Route
+            {/* <Route
               path="/eventdashboard"
               element={<EventDashboard />}
-            />
+            /> */}
 
-            <Route
+            {/* <Route
               path="/eventcalender"
               element={<EventCalender />}
-            />
+            /> */}
 
-            <Route
+            {/* <Route
               exact path="/eventcreate"
               element={<EventCreate />}
-            />
+            /> */}
 
-            <Route
+            {/* <Route
               path="/eventorganization"
               element={<Organization />}
-            />
+            /> */}
 
             <>
-              <Route path="/usersadd" element={<UserAdd />} />
+              {/* <Route path="/usersadd" element={<UserAdd />} />
               <Route path="/loantype" element={<LoanType />} />
-              <Route path="/grade" element={<Grade />} />
-              <Route path="/leavetype" element={<LeaveType />} />
-              <Route path="/acrclass" element={<AcrClass />} />
+              <Route path="/grade" element={<Grade />} /> */}
+              {/* <Route path="/acrclass" element={<AcrClass />} />
               <Route path="/acrtype" element={<AcrType />} />
               <Route path="/district" element={<District />} />
               <Route
@@ -213,8 +210,9 @@ function HrApp(props) {
                 path="/documenttype"
                 element={<DocumentType />}
               />
-              <Route path="/loanfund" element={<LoanFund />} />
-              <Route
+              <Route path="/loanfund" element={<LoanFund />} /> */}
+              {/* <Route path="/leavetype" element={<LeaveType />} /> */}
+              {/* <Route
                 path="/leavelist"
                 element={<LeaveEmployee />}
               />
@@ -222,25 +220,25 @@ function HrApp(props) {
               <Route
                 path="/rolespermission"
                 element={<RoleAndPermission />}
-              />
+              /> */}
             </>
 
 
-            <Route path="/rolesper" element={<Rolespermission />} />
+            {/* <Route path="/rolesper" element={<Rolespermission />} />
 
-            <Route path="/test" element={<Test />} />
+            <Route path="/test" element={<Test />} /> */}
           </>
 
 
-          <Route path="/addmodule" element={<AddModule />} />
+          {/* <Route path="/addmodule" element={<AddModule />} />
           <Route path="/addsubmodule" element={<AddSubModule />} />
-          <Route path="/addprogram" element={<AddProgram />} />
+          <Route path="/addprogram" element={<AddProgram />} /> */}
 
 
 
 
 
-          <Route
+          {/* <Route
             path="/allemployees/employeeprofile/:emp_id"
             element={<EmployeeProfile />}
           />
@@ -251,10 +249,10 @@ function HrApp(props) {
           <Route path="/singleprofile" element={<Singleprofile />} />
           <Route path="/changepassword" element={<ChangePassword />} />
           <Route path="/softRequisition" element={<RequisitionRequest />} />
-          <Route path="/softRequisitionReport/:req_id" element={<RequisitionReport />} />
+          <Route path="/softRequisitionReport/:req_id" element={<RequisitionReport />} /> */}
           {/* leave request */}
-          <Route path="/leaveApplicationformPrint/:l_id" element={<LeaveApplicationformPrint />} />
-          <Route path="/leaverequest" element={<AddleaveRequest />} />
+          {/* <Route path="/leaveApplicationformPrint/:l_id" element={<LeaveApplicationformPrint />} />
+          <Route path="/leaverequest" element={<AddleaveRequest />} /> */}
 
 
 
@@ -265,6 +263,7 @@ function HrApp(props) {
 
         </Routes>
       </>
+      <ToastContainer />
     </div>
   );
 }

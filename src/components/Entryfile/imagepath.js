@@ -5,7 +5,7 @@
 
 // export default imagepaths
 
-export { default as headerlogo } from '../assets/img/BBA-logo.png';
+export { default as headerlogo } from '../assets/img/logo3.png';
 export { default as Applogo } from '../assets/img/logo2.png';
 export { default as logo3 } from '../assets/img/logo3.png';
 export { default as lnEnglish } from '../assets/img/flags/us.png';
@@ -45,7 +45,7 @@ export { default as PlaceHolder } from '../assets/img/placeholder.jpg';
 export { default as minister } from '../assets/img/minister.jpg';
 export { default as Attachment } from '../assets/img/attachment.png';
 export { default as Video_Call } from '../assets/img/video-call.jpg';
-export { default as logImg } from '../assets/img/BBA-logo.png';
+export { default as logImg } from '../assets/img/logo3.png';
 export { default as logImg2 } from '../assets/img/landingIcon/BBA.png';
 export { default as landingIcon1 } from '../assets/img/landingIcon/icon8.png';
 export { default as landingIcon2 } from '../assets/img/landingIcon/icon10.png';

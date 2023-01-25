@@ -1,101 +1,140 @@
 import React, { useState } from "react";
+import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
-import { Outlet, useNavigate } from 'react-router-dom';
-import { logImg2 } from '../Entryfile/imagepath';
-import useAuth from "./hooks/useAuth";
+import { Link } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
+import { public_api } from "./hooks/baseApi";
 import LogInHeader from "./LogInHeader";
 
 const Login = () => {
-  const { register, handleSubmit, watch, formState: { errors } } = useForm();
   const navigate = useNavigate();
-  const [password, setPassword] = useState("");
-  const [userData, setUserData] = useState(null);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    mode: "onTouched",
+  });
 
-  const [passwordShown, setPasswordShown] = useState(false);
+  const onSubmit = async (data) => {
+    // console.log(data);
+    try {
+      const res = await public_api().post("user/login", {
+        User_Email: data.User_Email,
+        pass_word: data.pass_word,
+      })
+        .catch(function (error) {
+          toast.error(error.response.data.message)
+        });
+      // console.log("Success", res.data.data.token)
+      console.log("Success-------", res.data);
 
+      if (res.data.status == "Success") {
+        localStorage.setItem("role", res.data.data.user.role);
+        localStorage.setItem("uid", res.data.data.user.User_ID);
+        localStorage.setItem("email", res.data.data.user.User_Email);
+        localStorage.setItem("token", res.data.data.token);
+        console.log("Success-----222--", res.data.data.user);
+        // return <Redirect to='/app/main/dashboard' />
+        // <Navigate to="/dashboard" replace={true} />
+        // <Navigate to="app/main/dashboard" />;
+        // <Navigate to="/app/main/dashboard" replace={true} />;
+        navigate("/");
+        window.location.reload();
+        toast.success(res.data.message);
+      }
+    } catch (err) {
+      console.log(err.message);
+    }
 
-  const togglePasswordVisiblity = () => {
-    setPasswordShown(passwordShown ? false : true);
   };
 
 
-  const { loginAction, user } = useAuth()
-
-
-  const onSubmit = data => {
-    sessionStorage.setItem("redirect", true)
-    data.user = userData;
-    data.password = password;
-    loginAction({ user: data.user, password: data.password })
-    setUserData('')
-    setPassword('')
-    // navigate('/')
-
-  }
-
-  //
   return (
     <>
-
       <div >
         {
-          <div className="mb-5">
-            <LogInHeader></LogInHeader>
+          <div className="">
             <div >
-              <div className="row  page-size my-5">
+              <div className="account-content mt-8">
 
-                <div className="col-lg-3 col-sm-3 col-md-12 bg-primary d-flex justify-content-center  align-items-center">
-                  <div className='text-center p-lg-0 p-5'>
-                    <img src={logImg2} className="image-size" alt="" />
-                    <h3 className='text-white fw-bold mt-2' >BANGLADESH BRIDGE
-                      AUTHORITY</h3>
-
+                <div className="container">
+                  {/* Account Logo */}
+                  <div className="account-logo">
+                    <Link to="/"><img src="" alt="Dreamguy's Technologies" /></Link>
                   </div>
-
-                </div>
-                <div className="col-sm-2 col-md-2 col-lg-2 me-5">
-
-                </div>
-
-
-                <div className="col-sm-4 col-12 col-md-8 col-lg-4 text-start mt-lg-5 pt-lg-5">
-
-                  <div className='py-lg-5 border shadow login-style'>
-                    <h2 className='fw-bold text-center mt-5'>LOG IN</h2>
-                    <form className="px-5 pb-5" onSubmit={handleSubmit(onSubmit)} action="">
-                      <div className="mb-3">
-                        <label htmlFor="exampleFormControlInput1" className="form-label text-start">Username</label>
-                        <input value={userData} onChange={e => setUserData(e.target.value)} type="text" placeholder="User Name" className="form-control w-100" id="exampleFormControlInput1" required />
-                        <div className="mb-3">
-                          <label htmlFor="exampleFormControlInput2" className="form-label text-start pt-2">Password</label>
-                          <div className="pass-wrapper d-flex input-group mb-3">
-                            <input
-                              value={password}
-                              className="form-control"
-                              placeholder="Password"
-                              name="password"
-                              type={passwordShown ? "text" : "password"}
-                              aria-describedby="basic-addon2"
-                              onChange={e => setPassword(e.target.value)}
-                              required
+                  {/* /Account Logo */}
+                  <div className="account-box">
+                    <div className="account-wrapper">
+                      <h3 className="account-title">Login</h3>
+                      <p className="account-subtitle">Access to our dashboard</p>
+                      {/* Account Form */}
+                      <form onSubmit={handleSubmit(onSubmit)}>
+                        <div>
+                          <div className="form-group">
+                            <label>Email Address</label>
+                            <input className="form-control" type="email"
+                              name="User_Email"
+                              {...register("User_Email", {
+                                required: "this field is required.",
+                                pattern: {
+                                  value:
+                                    /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i,
+                                  message: "please enter a valid email address.",
+                                },
+                              })}
                             />
-
-                            <span class="input-group-text btn-eye " id="basic-addon2"><i onClick={togglePasswordVisiblity} class={passwordShown ? "fa fa-eye" : "fa fa-eye-slash"} aria-hidden="true"></i></span>
+                            {errors.User_Email && (
+                              <div className="text-danger">
+                                {errors.User_Email.message}
+                              </div>
+                            )}
                           </div>
-
-
-
-                          {/* <input onChange={e => setPassword(e.target.value)} type="password" className="form-control w-100" id="exampleFormControlInput2" /> */}
+                          <div className="form-group">
+                            <div className="row">
+                              <div className="col">
+                                <label>Password</label>
+                              </div>
+                              <div className="col-auto">
+                                <Link className="text-muted" to="/forgotpassword">
+                                  Forgot password?
+                                </Link>
+                              </div>
+                            </div>
+                            <input className="form-control" type="password"
+                              name="pass_word"
+                              {...register("pass_word", {
+                                required: "this field is required.",
+                                pattern: {
+                                  value:
+                                    /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&^_-]{4,}$/,
+                                  message: "please enter a valid password.",
+                                },
+                              })}
+                            />
+                            {errors.pass_word && (
+                              <div className="text-danger">
+                                {errors.pass_word.message}
+                              </div>
+                            )}
+                          </div>
+                          <div className="form-group text-center">
+                            <button
+                              type="submit"
+                              className="btn btn-primary account-btn"
+                            >
+                              Login
+                            </button>
+                          </div>
+                          <div className="account-footer">
+                            <p>Don't have an account yet? <Link to="/register">Register</Link></p>
+                          </div>
                         </div>
-
-                        <br />
-                        <button type="submit" className="btn btn-primary fs-5 w-100">Log In &rarr;</button>
-                      </div>
-                    </form>
-
+                      </form>
+                      {/* /Account Form */}
+                    </div>
                   </div>
                 </div>
-
               </div>
             </div>
           </div>

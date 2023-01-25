@@ -14,10 +14,20 @@ import "../../assets/js/app";
 import { notification } from "antd";
 import useAuth from "../hooks/useAuth";
 import Api from "../hooks/Api";
+import useServer from "../hooks/useServer";
 const Header = () => {
   const location = useLocation();
+  const {user} = useServer();
+  console.log(user);
+  const navigate = useNavigate();
+  let logout = () => {
+    localStorage.clear();
+    sessionStorage.clear();
+    // localStorage.removeItem('CardAccountID');
+    navigate("/login");
+    window.location.reload();
+  };
   let pathname = location.pathname;
-
   return (
     <div>
       <div>
@@ -34,8 +44,8 @@ const Header = () => {
               display: pathname.includes("tasks")
                 ? "none"
                 : pathname.includes("compose")
-                  ? "none"
-                  : "",
+                ? "none"
+                : "",
             }}
           >
             <span className="bar-icon">
@@ -46,7 +56,7 @@ const Header = () => {
           </a>
           {/* Header Title */}
           <div className="page-title-box">
-            <h3> Bangladesh Bridge Authority </h3>
+            <h3>Projmantech</h3>
           </div>
           {/* /Header Title */}
           <a id="mobile_btn" className="mobile_btn" href="#sidebar">
@@ -55,50 +65,48 @@ const Header = () => {
           {/* Header Menu */}
           <ul className="nav user-menu">
             {/* Search */}
-            {/* <li className="nav-item">
+            <li className="nav-item">
               <div className="top-nav-search">
                 <a href="" className="responsive-search">
                   <i className="fa fa-search" />
                 </a>
                 <form>
-                  <input className="form-control" type="text" placeholder="Search here" />
-                  <button className="btn" type="submit"><i className="fa fa-search" /></button>
+                  <input
+                    className="form-control"
+                    type="text"
+                    placeholder="Search here"
+                  />
+                  <button className="btn" type="submit">
+                    <i className="fa fa-search" />
+                  </button>
                 </form>
               </div>
-            </li> */}
+            </li>
             {/* /Search */}
-            {/* Flag */}
-            {/* /Flag */}
-            {/* Notifications */}
             {/* devoloper notification */}
-            <li className="nav-item dropdown me-4">
+            <li className="nav-item dropdown me-2">
               <a
                 href="#"
                 className="dropdown-toggle nav-link project-tooltip"
                 data-toggle="dropdown"
-
               >
                 <div class="blink">
                   <i class="fa fa-telegram fs-4" aria-hidden="true"></i>
                 </div>
 
-
                 <span class="project-tooltiptext"> Software Requisition</span>
               </a>
             </li>
 
-            <li className="nav-item dropdown me-4">
+            <li className="nav-item dropdown me-2">
               <a
                 href="#"
                 className="dropdown-toggle nav-link project-tooltip"
                 data-toggle="dropdown"
-
               >
-
                 <i class="fa fa-lightbulb-o" aria-hidden="true"></i>{" "}
                 <span class="project-tooltiptext"> D.Notification</span>
                 <span className="badge badge-pill">0</span>
-
               </a>
 
               <div className="dropdown-menu notifications">
@@ -108,24 +116,17 @@ const Header = () => {
               </div>
             </li>
 
-
-
-
             {/* /Notifications */}
             <li className="nav-item dropdown">
-
               <a
                 href="#"
                 className="dropdown-toggle nav-link project-tooltip"
                 data-toggle="dropdown"
               >
-
                 <i className="fa fa-bell-o" />{" "}
                 <span class="project-tooltiptext">Notification</span>
                 <span className="badge badge-pill">0</span>
-
               </a>
-
 
               <div className="dropdown-menu notifications">
                 <div className="topnav-dropdown-header">
@@ -137,24 +138,19 @@ const Header = () => {
                 </div>
                 <div className="noti-content">
                   <ul className="notification-list">
-
                     <li className="notification-message">
                       <div>
                         <u className="fs-6 ps-3 text-muted">Leave</u>
                         <i className="fa fs-6 ps-2 fa-bell-o" />{" "}
-                        <span className="text-danger fs-6 ">
-                          0
-                        </span>
+                        <span className="text-danger fs-6 ">0</span>
                       </div>
 
                       <Link to="/leave">
                         <div className="media border ps-2">
                           <div className="media-body">
                             <p className="noti-details">
-                              <span className="noti-title">
-                                leave
-                              </span>{" "}
-                              new Leave Request{" "}
+                              <span className="noti-title">leave</span> new
+                              Leave Request{" "}
                             </p>
                           </div>
                         </div>
@@ -163,24 +159,19 @@ const Header = () => {
                       <div>
                         <u className="fs-6 ps-3 text-muted">Loan</u>
                         <i className="fa fs-6 ps-2 fa-bell-o" />{" "}
-                        <span className="text-danger fs-6 ">
-                          0
-                        </span>
+                        <span className="text-danger fs-6 ">0</span>
                       </div>
 
                       <Link to="/loan">
                         <div className="media border ps-2">
                           <div className="media-body">
                             <p className="noti-details">
-                              <span className="noti-title">
-                                admin
-                              </span>{" "}
-                              new Loan Request{" "}
+                              <span className="noti-title">admin</span> new Loan
+                              Request{" "}
                             </p>
                           </div>
                         </div>
                       </Link>
-
                     </li>
                   </ul>
                 </div>
@@ -190,8 +181,6 @@ const Header = () => {
               </div>
             </li>
 
-
-
             {/* /Message Notifications */}
             <li className="nav-item dropdown has-arrow main-drop">
               <a
@@ -200,23 +189,22 @@ const Header = () => {
                 data-toggle="dropdown"
               >
                 <span className="header-img">
-
-
                   <div className="header-img avatar">
                     <img src={placeholderImg} />
                   </div>
-
-
                 </span>
-                <span>admin</span>
+                <span>{user.User_Name}</span>
               </a>
               <div className="dropdown-menu">
-                <Link className="dropdown-item" to="/singleprofile">My Profile</Link>
-                <Link className="dropdown-item" to="/changepassword">Change Password</Link>
-                <a className="dropdown-item" >Logout</a>
+                <Link className="dropdown-item" to="/profile">
+                  My Profile
+                </Link>
+                <Link className="dropdown-item" to="/changepassword">
+                  Change Password
+                </Link>
+                <a className="dropdown-item" onClick={logout}>Logout</a>
               </div>
             </li>
-
           </ul>
           {/* /Header Menu */}
           {/* Mobile Menu */}
@@ -230,16 +218,10 @@ const Header = () => {
               <i className="fa fa-ellipsis-v" />
             </a>
             <div className="dropdown-menu dropdown-menu-right">
-              <Link className="dropdown-item" to="/singleprofile">
+              <Link className="dropdown-item" to="/profile">
                 My Profile
               </Link>
-              <Link
-
-                className="dropdown-item"
-                to="/login"
-              >
-                Logout
-              </Link>
+              <a className="dropdown-item" onClick={logout}>Logout</a>
             </div>
           </div>
           {/* /Mobile Menu */}

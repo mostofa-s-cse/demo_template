@@ -28,7 +28,7 @@ const LogInHeader = () => {
       </a>
       {/* Header Title */}
       <div className="page-title-box">
-        <h3> Bangladesh Bridge Authority </h3>
+        <h3>Projmantech</h3>
       </div>
       {/* /Header Title */}
       {/* <a id="mobile_btn" className="mobile_btn" href="#sidebar"><i className="fa fa-bars" /></a> */}
